@@ -11,7 +11,7 @@ export const registerOrganization=async(
 )=>{
    const existing = await db 
     .prepare("SELECT * FROM organizations WHERE organization_id = ?")
-    .bind(data.email)
+    .bind(data.organization_id)
     .first<any>();
 
     if(existing){
