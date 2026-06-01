@@ -1,0 +1,22 @@
+{
+  "name": "leadorbit",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:migrate": "wrangler d1 migrations apply leadorbit-db",
+    "db:migrate:remote": "wrangler --env remote d1 migrations apply leadorbit-db"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "hono": "^4.12.23",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260601.1",
+    "@types/bcryptjs": "^2.4.6",
+    "typescript": "^5.9.3",
+    "wrangler": "^3.114.17"
+  }
+}
