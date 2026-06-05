@@ -10,6 +10,7 @@ export const registerUser = async (
     lastname: string;
     email: string;
     password: string;
+    phone_no:string
   }
 ) => {
   if (!secret) {
@@ -35,24 +36,15 @@ export const registerUser = async (
     .first<{ organization_id: string }>();
 
   if (!organization) {
-    const organization_id = crypto.randomUUID();
-    await db
-      .prepare(
-        `INSERT INTO organizations (organization_id, name)
-         VALUES (?, ?)`
-      )
-      .bind(organization_id, data.organization_name.trim())
-      .run();
-
-    organization = { organization_id };
+    throw new Error("Organization not found");
   }
 
   const hashedPassword = await bcrypt.hash(data.password, 10);
 
   await db
     .prepare(
-      `INSERT INTO users (user_id, organization_id, firstname, lastname, email, password)
-       VALUES (?, ?, ?, ?, ?, ?)`
+      `INSERT INTO users (user_id, organization_id, firstname, lastname, email, password, phone_no)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`
     )
     .bind(
       crypto.randomUUID(),
@@ -60,7 +52,8 @@ export const registerUser = async (
       data.firstname,
       data.lastname,
       data.email,
-      hashedPassword
+      hashedPassword,
+      data.phone_no
     )
     .run();
 
@@ -92,7 +85,11 @@ export const loginUser = async (
   }
 
   const token = await generateToken(
-    { user_id: user.user_id, email: user.email },
+    {
+      user_id: user.user_id,
+      email: user.email,
+      organization_id: user.organization_id,
+    },
     secret
   );
 

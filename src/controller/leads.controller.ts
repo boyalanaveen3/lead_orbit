@@ -26,6 +26,13 @@ export const getLead = async (c: Context<{ Bindings: Env }>) => {
 export const addLead = async (c: Context<{ Bindings: Env }>) => {
   try {
     const user = c.get("user" as never) as any;
+    if (!user?.user_id) {
+      throw new Error("Invalid token: user_id missing");
+    }
+    if (!user?.organization_id) {
+      throw new Error("Invalid token: organization_id missing, please login again");
+    }
+
     const data = await c.req.json();
     const result = await createLead(c.env.DB, user.organization_id, user.user_id, data);
     return c.json(result, 201);

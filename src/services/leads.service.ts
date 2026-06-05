@@ -35,6 +35,22 @@ export const createLead = async (
   created_by: string,
   data: any
 ) => {
+  if (!organization_id) {
+    throw new Error("organization_id is required");
+  }
+
+  if (!created_by) {
+    throw new Error("created_by is required");
+  }
+
+  if (!data.firstname?.trim()) {
+    throw new Error("firstname is required");
+  }
+
+  if (!data.phone_no?.trim()) {
+    throw new Error("phone_no is required");
+  }
+
   const lead_id = crypto.randomUUID();
 
   await db
@@ -47,10 +63,10 @@ export const createLead = async (
       organization_id,
       data.assigned_to ?? null,
       data.status_id ?? "status_new",
-      data.firstname,
+      data.firstname.trim(),
       data.lastname ?? null,
       data.email ?? null,
-      data.phone_no,
+      data.phone_no.trim(),
       data.company_name ?? null,
       data.source ?? null,
       data.remarks ?? null,
