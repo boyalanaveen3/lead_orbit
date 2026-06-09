@@ -1,19 +1,36 @@
 export const getAllLeads = async (
   db: D1Database,
-  organization_id: string
+  organization_id: string,
+  page:number,
+  limit:number
 ) => {
-  const result = await db
-    .prepare(
-      `SELECT l.*, ls.name as status
-       FROM leads l
-       JOIN lead_status ls ON ls.status_id = l.status_id
-       WHERE l.organization_id = ?
-       ORDER BY l.created_at DESC`
-    )
-    .bind(organization_id)
-    .all();
+  const offset = (page - 1) * limit;
 
-  return result.results;
+  const [result, countResult] = await Promise.all([
+    db
+      .prepare(
+        `SELECT l.*, ls.name as status
+         FROM leads l
+         JOIN lead_status ls ON ls.status_id = l.status_id
+         WHERE l.organization_id = ?
+         ORDER BY l.created_at DESC
+         LIMIT ${limit} OFFSET ${offset}`
+      )
+      .bind(organization_id)
+      .all(),
+    db
+      .prepare("SELECT COUNT(*) as total FROM leads WHERE organization_id = ?")
+      .bind(organization_id)
+      .first<{ total: number }>(),
+  ]);
+
+  return {
+    total: countResult?.total ?? 0,
+    page,
+    limit,
+    data: result.results,
+
+  };
 };
 
 export const getLeadById = async (

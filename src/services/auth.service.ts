@@ -30,13 +30,13 @@ export const registerUser = async (
     throw new Error("Organization name is required");
   }
 
-  let organization = await db
-    .prepare("SELECT organization_id FROM organizations WHERE name = ?")
+  const organization = await db
+    .prepare("SELECT organization_id FROM organizations WHERE LOWER(name) = LOWER(?)")
     .bind(data.organization_name.trim())
     .first<{ organization_id: string }>();
 
   if (!organization) {
-    throw new Error("Organization not found");
+    throw new Error("Organization not found. Please enter a valid organization name.");
   }
 
   const hashedPassword = await bcrypt.hash(data.password, 10);

@@ -7,7 +7,7 @@ const leadsRouter = new Hono<{ Bindings: Env }>();
 
 leadsRouter.use("*", authMiddleware);
 
-leadsRouter.get("/list", listLeads);
+leadsRouter.post("/list", listLeads);
 leadsRouter.get("/:id", getLead);
 leadsRouter.post("/add", addLead);
 leadsRouter.patch("/:id", editLead);

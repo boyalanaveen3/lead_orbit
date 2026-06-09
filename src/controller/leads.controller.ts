@@ -10,7 +10,10 @@ import { Env } from "../types";
 
 export const listLeads = async (c: Context<{ Bindings: Env }>) => {
   const user = c.get("user" as never) as any;
-  const leads = await getAllLeads(c.env.DB, user.organization_id);
+  const body = await c.req.json().catch(() => ({}));
+  const page = Number(body.page) || 1;
+  const limit = Number(body.limit) || 10;
+  const leads = await getAllLeads(c.env.DB, user.organization_id, page, limit);
   return c.json({ success: true, data: leads });
 };
 
