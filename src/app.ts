@@ -5,6 +5,8 @@ import authRouter from "./router/auth.router";
 import leadsRouter from "./router/leads.router";
 import orgrouter from "./router/organization.router";
 import userRoleRouter from "./router/userRole.router";
+import dashboardRouter from "./router/dashboard.router";
+import tasksRouter from "./router/tasks.router";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -20,5 +22,7 @@ app.route("/api/auth", authRouter);
 app.route("/api/leads", leadsRouter);
 app.route("/api", orgrouter);
 app.route("/api", userRoleRouter);
+app.route("/api/", dashboardRouter);
+app.route("/api/tasks", tasksRouter);
 
 export default app;
