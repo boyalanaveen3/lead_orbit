@@ -2,7 +2,7 @@ export const getDashboardStats = async (
   db: D1Database,
   organization_id: string
 ) => {
-  const [totalLeads, newLeads, pendingTasks, totalUsers] = await Promise.all([
+  const [totalLeads, newLeads, pendingTasks, totalUsers,interested,converted,lost] = await Promise.all([
     db
       .prepare("SELECT COUNT(*) as count FROM leads WHERE organization_id = ?")
       .bind(organization_id)
@@ -13,6 +13,15 @@ export const getDashboardStats = async (
       .first<{ count: number }>(),
     db
       .prepare("SELECT COUNT(*) as count FROM tasks WHERE status = 'pending'")
+      .first<{ count: number }>(),
+       db
+      .prepare("SELECT COUNT(*) as count FROM tasks WHERE status = 'interested'")
+      .first<{ count: number }>(),  
+      db
+      .prepare("SELECT COUNT(*) as count FROM tasks WHERE status = 'converted'")
+      .first<{ count: number }>(),
+      db
+      .prepare("SELECT COUNT(*) as count FROM tasks WHERE status = 'lost'")
       .first<{ count: number }>(),
     db
       .prepare("SELECT COUNT(*) as count FROM users WHERE organization_id = ? AND is_active = 1")
@@ -25,5 +34,9 @@ export const getDashboardStats = async (
     newLeads: newLeads?.count ?? 0,
     pendingTasks: pendingTasks?.count ?? 0,
     totalUsers: totalUsers?.count ?? 0,
+    interested: interested?.count ?? 0,
+    converted: converted?.count ?? 0,
+    lost: lost?.count ?? 0,
+
   };
 };

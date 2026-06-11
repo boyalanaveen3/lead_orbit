@@ -15,7 +15,8 @@ export const addTask = async (c: Context<{ Bindings: Env }>) => {
 export const listTasks = async (c: Context<{ Bindings: Env }>) => {
   try {
     const user = c.get("user" as never) as any;
-    const tasks = await getAllTasks(c.env.DB, user.user_id);
+    const { page = 1, limit = 10 } = await c.req.json();
+    const tasks = await getAllTasks(c.env.DB, user.user_id, Number(page), Number(limit));
     return c.json({ success: true, data: tasks });
   } catch (e: any) {
     return c.json({ success: false, message: e.message }, 500);

@@ -8,6 +8,6 @@ const tasksRouter = new Hono<{ Bindings: Env }>();
 tasksRouter.use("*", authMiddleware);
 
 tasksRouter.post("/add", addTask);
-tasksRouter.get("/list", listTasks);
+tasksRouter.post("/list", listTasks);
 
 export default tasksRouter;
