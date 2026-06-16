@@ -7,4 +7,5 @@ export type UserPayload = {
   user_id: string;
   email: string;
   organization_id: string;
+  role: string;
 };
