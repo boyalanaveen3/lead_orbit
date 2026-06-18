@@ -23,7 +23,7 @@ app.route("/api/auth", authRouter);
 app.route("/api/leads", leadsRouter);
 app.route("/api/users", usersRouter);
 app.route("/api/tasks", tasksRouter);
-app.route("/api/dashboard", dashboardRouter);
+app.route("/api", dashboardRouter);
 app.route("/api/settings", settingsRouter);
 app.route("/api", orgrouter);
 
